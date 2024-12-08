@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Api", "BookingSystem.Api\BookingSystem.Api.csproj", "{4DAF21E4-1C83-4AFC-8EBE-31FFAF0A83D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Domain", "BookingSystem.Domain\BookingSystem.Domain.csproj", "{33CCB41C-5B14-4BBD-9919-351C80634596}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DAF21E4-1C83-4AFC-8EBE-31FFAF0A83D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAF21E4-1C83-4AFC-8EBE-31FFAF0A83D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAF21E4-1C83-4AFC-8EBE-31FFAF0A83D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAF21E4-1C83-4AFC-8EBE-31FFAF0A83D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CCB41C-5B14-4BBD-9919-351C80634596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CCB41C-5B14-4BBD-9919-351C80634596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CCB41C-5B14-4BBD-9919-351C80634596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CCB41C-5B14-4BBD-9919-351C80634596}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E45F1CF-1BF5-4469-8865-43E0495DB108}
+	EndGlobalSection
+EndGlobal
