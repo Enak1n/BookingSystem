@@ -1,4 +1,5 @@
 using BookingSystem.Infrastructure.Extensions;
+using BookingSystem.BL.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -9,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(configuration);
+builder.Services.AddBlServices();
 
 var app = builder.Build();
 

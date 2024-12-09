@@ -1,4 +1,6 @@
-﻿using BookingSystem.Infrastructure.Data;
+﻿using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
+using BookingSystem.Infrastructure.Data;
+using BookingSystem.Infrastructure.Data.Repositories;
 using BookingSystem.Infrastructure.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,7 @@ namespace BookingSystem.Infrastructure.Extensions
 
             services.AddAutoMapper(typeof(DataBaseMappings));
 
+            services.AddScoped<IPlaneRepository, PlaneRepository>();
             services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
 
             return services;
