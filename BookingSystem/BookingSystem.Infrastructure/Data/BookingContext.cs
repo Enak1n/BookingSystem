@@ -3,7 +3,7 @@ using BookingSystem.Infrastructure.Entities;
 using BookingSystem.Infrastructure.EntitiesConfiguration;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingSystem.Infrastructure
+namespace BookingSystem.Infrastructure.Data
 {
     public class BookingContext : DbContext, IUnitOfWork
     {

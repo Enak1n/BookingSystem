@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace BookingSystem.Infrastructure
+namespace BookingSystem.Infrastructure.Data
 {
     public class ContextFactory : IDesignTimeDbContextFactory<BookingContext>
     {

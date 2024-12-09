@@ -17,4 +17,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookingSystem.BL\BookingSystem.BL.csproj" />
+  </ItemGroup>
+
 </Project>
