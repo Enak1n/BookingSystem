@@ -1,4 +1,5 @@
-﻿using BookingSystem.Domain.AggregatesModel.PlaneAggregate.Services;
+﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate.Services;
+using BookingSystem.Domain.AggregatesModel.PlaneAggregate.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingSystem.Api.Controllers
@@ -7,9 +8,9 @@ namespace BookingSystem.Api.Controllers
     [Route("api/[controller]")]
     public class PlaneController : ControllerBase
     {
-        private readonly IPlaneService _planeService;
+        private readonly IAirportService _planeService;
 
-        public PlaneController(IPlaneService planeService)
+        public PlaneController(IAirportService planeService)
         {
             _planeService = planeService;
         }
@@ -17,7 +18,7 @@ namespace BookingSystem.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var res = await _planeService.GetAllPlanesAsync();
+            var res = await _planeService.GetAllAsync();
 
             return Ok(res);
         }

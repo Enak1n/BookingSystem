@@ -1,5 +1,6 @@
 using BookingSystem.Infrastructure.Extensions;
 using BookingSystem.BL.Extensions;
+using BookingSystem.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
