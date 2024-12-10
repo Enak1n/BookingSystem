@@ -4,6 +4,7 @@ using BookingSystem.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+configuration.AddEnvironmentVariables();
 
 builder.Services.AddControllers();
 
@@ -14,6 +15,8 @@ builder.Services.AddInfrastructure(configuration);
 builder.Services.AddBlServices();
 
 var app = builder.Build();
+
+app.Services.DatabaseMigrate();
 
 if (app.Environment.IsDevelopment())
 {

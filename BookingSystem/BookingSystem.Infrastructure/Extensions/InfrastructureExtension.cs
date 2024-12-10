@@ -24,5 +24,18 @@ namespace BookingSystem.Infrastructure.Extensions
 
             return services;
         }
+
+        /// <summary>
+        /// Применение миграций для контекста к базе данных.
+        /// </summary>
+        public static void DatabaseMigrate(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<BookingContext>();
+
+            if (db.Database.IsRelational())
+                db.Database.Migrate();
+        }
+
     }
 }
