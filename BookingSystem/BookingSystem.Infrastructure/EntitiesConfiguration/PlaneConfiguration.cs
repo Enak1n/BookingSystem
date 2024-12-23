@@ -11,6 +11,9 @@ namespace BookingSystem.Infrastructure.EntitiesConfiguration
             builder.ToTable("Planes");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .IsRequired();
 
             builder.HasMany(x => x.Flights)
                 .WithOne(x => x.Plane)

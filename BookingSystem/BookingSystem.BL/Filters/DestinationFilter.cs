@@ -6,11 +6,11 @@ namespace BookingSystem.BL.Filters
 {
     public class DestinationFilter : IFlightFilter
     {
-        public async Task<IQueryable<Flight>> FilterFlights(IQueryable<Flight> query, FlightFilterParams filterParams)
+        public async Task<List<Flight>> FilterFlights(List<Flight> query, FlightFilterParams filterParams)
         {
             if (!string.IsNullOrEmpty(filterParams.Destination))
             {
-                query = query.Where(f => f.DestinationPoint.Contains(filterParams.Destination));
+                query = query.Where(f => f.DestinationPoint.Contains(filterParams.Destination)).ToList();
             }
 
             return query;

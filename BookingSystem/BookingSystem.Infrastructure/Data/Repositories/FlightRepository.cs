@@ -22,7 +22,7 @@ namespace BookingSystem.Infrastructure.Data.Repositories
         {
             var flightsEntity = await _bookingContext.Flights.Where(x => x.DeparturePoint == departurePoint
                                                                          && x.DestinationPoint == destinationPoint
-                                                                         && x.DepartureDate < departureDate).ToListAsync();
+                                                                         && DateTime.UtcNow < departureDate).Include(x => x.Plane).ToListAsync();
 
             var flights = _mapper.Map<List<Flight>>(flightsEntity);
 

@@ -1,20 +1,28 @@
 ﻿using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
 using BookingSystem.Domain.Exceptions;
+using Newtonsoft.Json;
 
 namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 {
     public class Flight : BaseModel
     {
+        [JsonProperty]
         public string DeparturePoint { get; private set; }
-        
+
+        [JsonProperty]
         public string DestinationPoint { get; private set; }
 
+        [JsonProperty]
         public Plane Plane { get; private set; }
 
         public int EmptyPlaces { get; private set; }
 
         public DateTime DepartureDate { get; private set; }
 
+        private Flight()
+        {
+
+        }
 
         private Flight(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate)
         {

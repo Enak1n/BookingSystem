@@ -12,7 +12,7 @@ namespace BookingSystem.BL.Filters
             _filters = filters;
         }
 
-        public async Task<IQueryable<Flight>> ApplyFilters(IQueryable<Flight> query, FlightFilterParams filterParams)
+        public async Task<List<Flight>> ApplyFilters(List<Flight> query, FlightFilterParams filterParams)
         {
             foreach (var filter in _filters)
             {

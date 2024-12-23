@@ -10,6 +10,11 @@ namespace BookingSystem.Domain.AggregatesModel.PlaneAggregate
 
         public int PassengersCount { get; private set; }
 
+        private Plane()
+        {
+
+        }
+
         private Plane(Guid id, string model, int yearOfCreation, DateTimeOffset dateOfCreation, int passengersCount)
         {
             Id = id;

@@ -17,9 +17,9 @@ namespace BookingSystem.BL.Services
 
         public async Task<List<Flight>> FilterFlightsAsync(List<Flight> flights, FlightFilterParams filterParams, CancellationToken cancellationToken)
         {
-            var query = await _filterPipeline.ApplyFilters(flights.AsQueryable(), filterParams);
+            var query = await _filterPipeline.ApplyFilters(flights, filterParams);
 
-            return await query.ToListAsync(cancellationToken);
+            return query;
         }
     }
 }

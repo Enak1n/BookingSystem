@@ -11,7 +11,7 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 
 configuration.AddEnvironmentVariables();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -20,6 +20,8 @@ namespace BookingSystem.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new FlightConfiguration());
             modelBuilder.ApplyConfiguration(new CountryConfiguration());
             modelBuilder.ApplyConfiguration(new AirportConfiguration());
+
+            modelBuilder.HasPostgresExtension("uuid-ossp");
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
