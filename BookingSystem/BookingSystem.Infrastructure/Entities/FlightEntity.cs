@@ -10,6 +10,8 @@
 
         public int EmptyPlaces { get; set; }
 
+        public DateTime DepartureDate { get; set; }
+
         public PlaneEntity Plane { get; set; }
     }
 }

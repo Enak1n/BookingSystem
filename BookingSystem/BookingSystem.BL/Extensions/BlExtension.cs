@@ -1,7 +1,10 @@
-﻿using BookingSystem.BL.Services;
+﻿using BookingSystem.BL.Filters;
+using BookingSystem.BL.Services;
 using BookingSystem.Domain.AggregatesModel.PlaceAggregate.Services;
 using BookingSystem.Domain.AggregatesModel.PlaneAggregate.Services;
+using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace BookingSystem.BL.Extensions
 {
@@ -11,6 +14,9 @@ namespace BookingSystem.BL.Extensions
         {
             services.AddScoped<IPlaneService, PlaneService>();
             services.AddScoped<IAirportService, AirportService>();
+            services.AddTransient<IFlightFilter, DestinationFilter>();
+            services.AddTransient<FlightFilterPipeline>();
+            services.AddScoped<IFlightService, FlightService>();
 
             return services;
         }
