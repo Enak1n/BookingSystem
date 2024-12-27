@@ -39,7 +39,12 @@ namespace BookingSystem.Infrastructure.Data.Repositories
 
         public async Task<Flight> GetByIdAsync(Guid id)
         {
-            var flightEntity = await _bookingContext.Flights.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var flightEntity = await _bookingContext.Flights.AsNoTracking()
+                .Include(x => x.DepartureAirport)
+                .Include(x => x.DestinationAirport)
+                .Include(x => x.Plane)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
             var flight = _mapper.Map<Flight>(flightEntity);
 
             return flight;

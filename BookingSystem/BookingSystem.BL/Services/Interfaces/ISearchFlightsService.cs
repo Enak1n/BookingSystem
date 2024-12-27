@@ -5,6 +5,6 @@ namespace BookingSystem.BL.Services.Interfaces
 {
     public interface ISearchFlightsService
     {
-        Task<List<Flight>> FilterFlightsAsync(List<Flight> flights, FlightFilterParams filterParams, CancellationToken cancellationToken);
+        Task<List<FlightDto>> FilterFlightsAsync(List<FlightDto> flights, FlightFilterParams filterParams, CancellationToken cancellationToken);
     }
 }

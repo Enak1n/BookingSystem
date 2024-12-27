@@ -15,7 +15,7 @@ namespace BookingSystem.BL.Services
             _filterPipeline = flightFilterPipeline;
         }
 
-        public async Task<List<Flight>> FilterFlightsAsync(List<Flight> flights, FlightFilterParams filterParams, CancellationToken cancellationToken)
+        public async Task<List<FlightDto>> FilterFlightsAsync(List<FlightDto> flights, FlightFilterParams filterParams, CancellationToken cancellationToken)
         {
             var query = await _filterPipeline.ApplyFilters(flights, filterParams);
 

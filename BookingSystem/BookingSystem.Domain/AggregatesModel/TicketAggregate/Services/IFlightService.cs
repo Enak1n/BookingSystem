@@ -3,5 +3,6 @@
     public interface IFlightService
     {
         Task<List<Flight>> FindFlightsAsync(string departurePoint, string destinationPoint, DateTime departureDate);
+        Task<Flight> GetInfoAboutFlightAsync(Guid id);
     }
 }

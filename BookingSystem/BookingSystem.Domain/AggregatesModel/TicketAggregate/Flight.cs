@@ -1,4 +1,5 @@
-﻿using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
+﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
+using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
 using BookingSystem.Domain.Exceptions;
 using Newtonsoft.Json;
 
@@ -6,34 +7,32 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 {
     public class Flight : BaseModel
     {
-        [JsonProperty]
         public string DeparturePoint { get; private set; }
 
-        [JsonProperty]
         public string DestinationPoint { get; private set; }
 
-        [JsonProperty]
         public Plane Plane { get; private set; }
 
         public int EmptyPlaces { get; private set; }
 
         public DateTime DepartureDate { get; private set; }
 
-        private Flight()
-        {
+        public Airport DepartureAirport { get; private set; }
+        public Airport DestinatioAirport { get; private set; }
 
-        }
 
-        private Flight(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate)
+        private Flight(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate, Airport departureAirport, Airport destinationAirport)
         {
             DeparturePoint = departurePoint;
             DestinationPoint = destinationPoint;
             Plane = plane;
             EmptyPlaces = plane.PassengersCount;
-            DepartureDate = departureDate;  
+            DepartureDate = departureDate;
+            DepartureAirport = departureAirport;
+            DestinatioAirport = destinationAirport;
         }
 
-        public static Flight Create(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate)
+        public static Flight Create(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate, Airport departureAirport, Airport destinationAirport)
         {
             if (string.IsNullOrEmpty(departurePoint))
                 throw new DomainException("Пункт отправления не может быть пустым!");
@@ -47,7 +46,7 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
             if (departureDate < DateTime.UtcNow.AddDays(3) && departureDate < DateTime.UtcNow)
                 throw new DomainException("Проверьте правильность выбора даты полета");
 
-            return new Flight(departurePoint, destinationPoint, plane, departureDate);
+            return new Flight(departurePoint, destinationPoint, plane, departureDate, departureAirport, destinationAirport);
         }
 
         public void TryToBuyFlight()

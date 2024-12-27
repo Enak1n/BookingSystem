@@ -1,4 +1,5 @@
-﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate;
+﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
+using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 
 namespace BookingSystem.BL.Services
@@ -17,6 +18,13 @@ namespace BookingSystem.BL.Services
             var flights = await _flightRepository.FindAsync(departurePoint, destinationPoint, departureDate);
 
             return flights;
+        }
+
+        public async Task<Flight> GetInfoAboutFlightAsync(Guid id)
+        {
+            var flight = await _flightRepository.GetByIdAsync(id);
+            
+            return flight;
         }
     }
 }

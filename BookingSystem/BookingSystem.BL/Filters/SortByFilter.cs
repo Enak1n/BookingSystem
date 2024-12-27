@@ -6,7 +6,7 @@ namespace BookingSystem.BL.Filters
 {
     public class SortByFilter : IFlightFilter
     {
-        public async Task<List<Flight>> FilterFlights(List<Flight> query, FlightFilterParams filterParams)
+        public async Task<List<FlightDto>> FilterFlights(List<FlightDto> query, FlightFilterParams filterParams)
         {
             if (!string.IsNullOrEmpty(filterParams.SortBy))
             {

@@ -1,11 +1,9 @@
 ﻿using BookingSystem.Api.DTO;
+using BookingSystem.Api.DTO.Flights;
 using BookingSystem.BL.Models;
 using BookingSystem.BL.Services.Interfaces;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 
 namespace BookingSystem.Api.Controllers
 {
@@ -19,27 +17,39 @@ namespace BookingSystem.Api.Controllers
         public FlightController(IFlightService flightService, ISearchFlightsService searchFlightsService)
         {
             _flightService = flightService;
+            _searchFlightsService = searchFlightsService;
         }
 
         [HttpGet]
         public async Task<IActionResult> FindFlights([FromQuery] FindFlightsRequest findFlights)
         {
-            var res = await _flightService.FindFlightsAsync(findFlights.DeparturePoint, findFlights.DestinationPoint, findFlights.DeparturedDate);
+            var flights = await _flightService.FindFlightsAsync(findFlights.DeparturePoint, findFlights.DestinationPoint, findFlights.DeparturedDate);
 
-            Response.Cookies.Append("flights", JsonConvert.SerializeObject(res));
+            var res = flights.Select(x => new FlightDto
+            {
+                Id = x.Id,
+                DepartureDate = x.DepartureDate,
+                DeparturePoint = x.DeparturePoint,
+                DestinationPoint = x.DestinationPoint,
+            });
+
             return Ok(res);
         }
 
         [HttpPost("filter")]
-        public async Task<IActionResult> FilterFlights(FlightFilterParams filterRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> FilterFlights(FilterRequest filterRequest, CancellationToken cancellationToken)
         {
-            var json = Request.Cookies.TryGetValue("flights", out string flights);
-
-            var flights1 = JsonConvert.DeserializeObject<List<Flight>>(flights);
-
-            var filtered = await _searchFlightsService.FilterFlightsAsync(flights1, filterRequest, cancellationToken);
+            var filtered = await _searchFlightsService.FilterFlightsAsync(filterRequest.Flights, filterRequest.FilterParams, cancellationToken);
 
             return Ok(filtered);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetInfoAboutFlight(Guid id)
+        {
+            var flight = await _flightService.GetInfoAboutFlightAsync(id);
+
+            return Ok(flight);
         }
     }
 }

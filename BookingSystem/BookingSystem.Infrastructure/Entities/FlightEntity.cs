@@ -7,11 +7,15 @@
         public string DestinationPoint { get; set; }
 
         public Guid PlaneId { get; set; }
+        public Guid? DestinationAirportId { get; set; }
+        public Guid? DepartureAirportId { get; set; }
 
         public int EmptyPlaces { get; set; }
 
         public DateTime DepartureDate { get; set; }
 
         public PlaneEntity Plane { get; set; }
+        public AirportEntity DestinationAirport { get; set; }
+        public AirportEntity DepartureAirport { get; set; }
     }
 }
