@@ -1,6 +1,7 @@
 ﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
+using BookingSystem.Domain.SeedWork;
 
 namespace BookingSystem.BL.Services
 {

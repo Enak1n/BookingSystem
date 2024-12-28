@@ -1,6 +1,7 @@
 ﻿using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
 using BookingSystem.Domain.AggregatesModel.PlaneAggregate.Services;
 using BookingSystem.Domain.Exceptions;
+using BookingSystem.Domain.SeedWork;
 
 namespace BookingSystem.BL.Services
 {

@@ -1,7 +1,6 @@
-﻿using BookingSystem.Domain.SeedWork;
-using System.Linq.Expressions;
+﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 
-namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
+namespace BookingSystem.Domain.SeedWork
 {
     public interface IFlightRepository : IGenericRepository<Flight>
     {

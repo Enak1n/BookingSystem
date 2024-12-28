@@ -12,6 +12,7 @@ namespace BookingSystem.Infrastructure.Mappings
         {
             CreateMap<PlaneEntity, Plane>();
 
+            CreateMap<TicketEntity, Ticket>();
             CreateMap<FlightEntity, Flight>()
                 .ForMember(dest => dest.DeparturePoint, opt => opt.MapFrom(src => src.DeparturePoint))
                 .ForMember(dest => dest.DestinationPoint, opt => opt.MapFrom(src => src.DestinationPoint))

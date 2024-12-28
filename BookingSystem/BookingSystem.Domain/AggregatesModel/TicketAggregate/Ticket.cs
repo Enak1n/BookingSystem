@@ -5,23 +5,30 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 {
     public class Ticket : BaseModel
     {
-        public string FlightNumber { get; private set; }
-
         public Plane Plane { get; private set; }
 
-        private Ticket(Guid id, string flightNumber, Plane plane)
+        public Passenger Passenger { get; private set; }
+        public Flight Fligth { get; private set; }
+
+        private Ticket(Guid id, Plane plane, Passenger passenger, Flight fligth)
         {
             Id = id;
-            FlightNumber = flightNumber;
             Plane = plane;
+            Passenger = passenger;
+            Fligth = fligth;
         }
 
-        public static Ticket Create(Guid id, string flightNumber, Plane plane)
+        public static Ticket Create(Guid id, Plane plane, Passenger passenger, Flight flight)
         {
-            if (string.IsNullOrEmpty(flightNumber))
-                throw new DomainException("Номер билета не может быть пустым!");
+            return new Ticket(id, plane, passenger, flight);
+        }
 
-            return new Ticket(id, flightNumber, plane);
-        } 
+        public void TryToBuyTicket(Flight flight)
+        {
+            if (flight.EmptyPlaces <= 0)
+                throw new DomainException("Места на данный рейс закончены!");
+
+            flight.TakeASeat();
+        }
     }
 }

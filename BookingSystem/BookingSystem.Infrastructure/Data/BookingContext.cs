@@ -1,5 +1,6 @@
 ﻿using BookingSystem.Domain.SeedWork;
 using BookingSystem.Infrastructure.Entities;
+using BookingSystem.Infrastructure.Entities.Outbox;
 using BookingSystem.Infrastructure.EntitiesConfiguration;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace BookingSystem.Infrastructure.Data
         public DbSet<FlightEntity> Flights => Set<FlightEntity>();
         public DbSet<CountryEntity> Cuntries => Set<CountryEntity>();
         public DbSet<AirportEntity> Airports => Set<AirportEntity>();
+        public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
+        public DbSet<PaymentStatus> PaymentStatuses => Set<PaymentStatus>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +23,8 @@ namespace BookingSystem.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new FlightConfiguration());
             modelBuilder.ApplyConfiguration(new CountryConfiguration());
             modelBuilder.ApplyConfiguration(new AirportConfiguration());
+            modelBuilder.ApplyConfiguration(new TicketEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PaymentStatusConfiguration());
 
             modelBuilder.HasPostgresExtension("uuid-ossp");
         }

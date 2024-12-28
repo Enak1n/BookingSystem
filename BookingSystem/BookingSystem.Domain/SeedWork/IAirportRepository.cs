@@ -1,11 +1,10 @@
-﻿using BookingSystem.Domain.SeedWork;
+﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
 using System.Linq.Expressions;
 
-namespace BookingSystem.Domain.AggregatesModel.PlaceAggregate
+namespace BookingSystem.Domain.SeedWork
 {
     public interface IAirportRepository : IGenericRepository<Airport>
     {
-        Task<List<Airport>> GetAllAsync();
         Task<List<Airport>> FindAsync(Expression<Func<Airport, bool>> predicate);
         Task<Airport> GetByIdAsync(Guid id);
     }

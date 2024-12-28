@@ -1,5 +1,6 @@
 ﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
 using BookingSystem.Domain.AggregatesModel.PlaceAggregate.Services;
+using BookingSystem.Domain.SeedWork;
 
 namespace BookingSystem.BL.Services
 {

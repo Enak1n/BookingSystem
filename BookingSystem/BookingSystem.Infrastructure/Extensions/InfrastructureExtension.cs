@@ -1,6 +1,4 @@
-﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
-using BookingSystem.Domain.AggregatesModel.PlaneAggregate;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
+﻿using BookingSystem.Domain.SeedWork;
 using BookingSystem.Infrastructure.Data;
 using BookingSystem.Infrastructure.Data.Repositories;
 using BookingSystem.Infrastructure.Mappings;

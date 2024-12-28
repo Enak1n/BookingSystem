@@ -2,6 +2,7 @@
 {
     public class FlightEntity : BaseEntity
     {
+        public string NumberOfTheFlight { get; set; }
         public string DeparturePoint { get; set; }
 
         public string DestinationPoint { get; set; }
@@ -17,5 +18,6 @@
         public PlaneEntity Plane { get; set; }
         public AirportEntity DestinationAirport { get; set; }
         public AirportEntity DepartureAirport { get; set; }
+        public ICollection<TicketEntity> Tickets { get; set; }
     }
 }
