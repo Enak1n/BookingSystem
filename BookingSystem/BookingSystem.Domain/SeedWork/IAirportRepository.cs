@@ -5,6 +5,7 @@ namespace BookingSystem.Domain.SeedWork
 {
     public interface IAirportRepository : IGenericRepository<Airport>
     {
+        Task<List<Airport>> GetAllAsync(CancellationToken cancellationToken);
         Task<List<Airport>> FindAsync(Expression<Func<Airport, bool>> predicate);
         Task<Airport> GetByIdAsync(Guid id);
     }

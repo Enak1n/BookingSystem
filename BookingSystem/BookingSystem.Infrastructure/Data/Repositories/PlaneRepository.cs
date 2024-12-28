@@ -18,9 +18,9 @@ namespace BookingSystem.Infrastructure.Data.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<Plane>> GetAllAsync()
+        public async Task<List<Plane>> GetAllAsync(CancellationToken cancellationToken)
         {
-            var planes = await _bookingContext.Planes.AsNoTracking().ToListAsync();
+            var planes = await _bookingContext.Planes.AsNoTracking().ToListAsync(cancellationToken);
 
             var result = _mapper.Map<List<Plane>>(planes);
 

@@ -24,10 +24,10 @@ namespace BookingSystem.Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<List<Airport>> GetAllAsync()
+        public async Task<List<Airport>> GetAllAsync(CancellationToken cancellationToken)
         {
             var airports = await _bookingContext.Airports.AsNoTracking().
-                Include(x => x.Country).ToListAsync();
+                Include(x => x.Country).ToListAsync(cancellationToken);
 
             var res = _mapper.Map<List<Airport>>(airports);
 

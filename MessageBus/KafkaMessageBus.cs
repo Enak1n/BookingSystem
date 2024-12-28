@@ -2,7 +2,7 @@
 
 namespace MessageBus
 {
-    public sealed class MessageBus : IDisposable
+    public sealed class KafkaMessageBus : IDisposable
     {
         private readonly IProducer<int, string> _producer;
         private IConsumer<int, string> _consumer;
@@ -10,7 +10,7 @@ namespace MessageBus
         private readonly ProducerConfig _producerConfig;
         private readonly ConsumerConfig _consumerConfig;
 
-        public MessageBus(string host)
+        public KafkaMessageBus(string host)
         {
             _producerConfig = new ProducerConfig
             {

@@ -9,32 +9,37 @@ services:
       context: .
       dockerfile: BookingSystem.Api/Dockerfile
 
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    restart: "no"
-    ports:
-      - "9000:9000"
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.9
     environment:
-      KAFKA_BROKERCONNECT: "kafka:29092"
-    depends_on:
-      - "kafka"
+        ALLOW_ANONYMOUS_LOGIN: yes
 
-  kafka:
-    image: obsidiandynamics/kafka
-    restart: "no"
-    ports:
-      - "2181:2181"
-      - "9092:9092"
+  message_broker:
+    image: ${DOCKER_REGISTRY-}bitnami/kafka
     environment:
-      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
-      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
-      KAFKA_RESTART_ATTEMPTS: "10"
-      KAFKA_RESTART_DELAY: "5"
-      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
-      KAFKA_CREATE_TOPICS: "sender:1:1,notifications:1:1"
+        KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper
+        KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+        KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://message_broker:9092
+        KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+        # JMX_PORT: 9997
+        # KAFKA_CFG_PROCESS_ROLES: controller,broker
+        # KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    depends_on:
+        - zookeeper
+
+  kafka_ui:
+    container_name: kafka-ui
+    image: ${DOCKER_REGISTRY-}provectuslabs/kafka-ui
+    ports:
+        - 8080:8080
+    environment:
+        KAFKA_CLUSTERS_0_NAME: transitional_path
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: message_broker:9092
+        KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+        KAFKA_CLUSTERS_0_JMXPORT: 9997
+        DYNAMIC_CONFIG_ENABLED: true
+    depends_on: 
+        - message_broker
 
   database:
     image: postgres

@@ -2,7 +2,7 @@
 {
     public interface IAirportService
     {
-        Task<List<Airport>> GetAllAsync();
+        Task<List<Airport>> GetAllAsync(CancellationToken cancellationToken);
         Task<Airport> GetByIdAsync(Guid id);
     }
 }

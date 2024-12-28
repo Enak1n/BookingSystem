@@ -19,6 +19,7 @@ namespace BookingSystem.Infrastructure.Extensions
             services.AddScoped<IPlaneRepository, PlaneRepository>();
             services.AddScoped<IAirportRepository, AirportRepository>();
             services.AddScoped<IFlightRepository, FlightRepository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
 
             services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
 

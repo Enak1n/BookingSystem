@@ -14,9 +14,9 @@ namespace BookingSystem.BL.Services
             _planeRepository = planeRepository;
         }
 
-        public Task<List<Plane>> GetAllPlanesAsync()
+        public Task<List<Plane>> GetAllPlanesAsync(CancellationToken cancellationToken)
         {
-            var planes = _planeRepository.GetAllAsync();
+            var planes = _planeRepository.GetAllAsync(cancellationToken);
 
             return planes;
         }

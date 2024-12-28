@@ -2,7 +2,7 @@
 {
     public interface IPlaneService
     {
-        Task<List<Plane>> GetAllPlanesAsync();
+        Task<List<Plane>> GetAllPlanesAsync(CancellationToken cancellationToken);
         Task<Plane> GetPlaneByIdAsync(Guid id);
     }
 }
