@@ -6,6 +6,9 @@ using Serilog;
 using BookingSystem.Api.Options;
 using MessageBus;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz;
+using BookingSystem.Api.Workers;
+using BookingSystem.Api.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -21,8 +24,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(configuration);
 builder.Services.AddBlServices();
+builder.Services.AddSingleton<PaymentClient>();
 
 builder.Services.Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
+builder.Services.Configure<YooKassaSettings>(configuration.GetSection(nameof(YooKassaSettings)));
 
 var kafkaHost = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
 
@@ -30,6 +35,19 @@ builder.Services.AddScoped(serviceProvider =>
 {
     return new KafkaMessageBus(kafkaHost.Host);
 });
+
+
+builder.Services.AddQuartz(cfg =>
+{
+    var jobKey = new JobKey(nameof(SendPaymentMessagesJob));
+
+    cfg.AddJob<SendPaymentMessagesJob>(jobKey)
+        .AddTrigger(t =>
+            t.ForJob(jobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
+        );
+});
+
+builder.Services.AddQuartzHostedService();
 
 
 var app = builder.Build();

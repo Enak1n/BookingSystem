@@ -15,7 +15,7 @@ namespace BookingSystem.Api.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpPost("test")]
+        [HttpPost("createPayment")]
         public async Task<IActionResult> Test(CreatePaymentDto createPaymentDto)
         {
             await _paymentService.CreatePayment(createPaymentDto);

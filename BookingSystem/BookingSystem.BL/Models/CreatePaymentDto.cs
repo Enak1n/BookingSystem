@@ -6,7 +6,7 @@ namespace BookingSystem.BL.Models
     public class CreatePaymentDto()
     {
         public Guid Id { get; set; }
-        //public FlightEntity Flight { get; set; }
-        //public PassengerEntity Passenger { get; set; }
+        public FlightDto Flight { get; set; }
+        public PassengerEntity Passenger { get; set; }
     }
 }

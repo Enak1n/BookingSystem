@@ -3,6 +3,7 @@ using BookingSystem.BL.Services.Interfaces;
 using BookingSystem.Infrastructure.Data;
 using BookingSystem.Infrastructure.Entities.Outbox;
 using MessageBus;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace BookingSystem.BL.Services
@@ -11,12 +12,12 @@ namespace BookingSystem.BL.Services
     {
         // TODO: Переделать на репозиторий
         private readonly BookingContext _bookingContext;
-        private readonly KafkaMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
 
-        public PaymentService(BookingContext bookingContext, KafkaMessageBus messageBus)
+        public PaymentService(BookingContext bookingContext, IConfiguration configuration)
         {
             _bookingContext = bookingContext;
-            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         public async Task CreatePayment(CreatePaymentDto createPaymentDto)
@@ -34,7 +35,7 @@ namespace BookingSystem.BL.Services
             await _bookingContext.PaymentStatuses.AddAsync(paymentStatus);
             await _bookingContext.SaveChangesAsync();
 
-            await _messageBus.SendMessage("test", "json");
+            
         }
     }
 }
