@@ -13,7 +13,7 @@ namespace BookingSystem.BL.Services
         private readonly BookingContext _bookingContext;
         private readonly KafkaMessageBus _messageBus;
 
-        public PaymentService(BookingContext bookingContext /*KafkaMessageBus messageBus*/)
+        public PaymentService(BookingContext bookingContext, KafkaMessageBus messageBus)
         {
             _bookingContext = bookingContext;
             _messageBus = messageBus;
@@ -34,7 +34,7 @@ namespace BookingSystem.BL.Services
             await _bookingContext.PaymentStatuses.AddAsync(paymentStatus);
             await _bookingContext.SaveChangesAsync();
 
-            await _messageBus.SendMessage("test", json);
+            await _messageBus.SendMessage("test", "json");
         }
     }
 }

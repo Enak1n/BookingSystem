@@ -1,35 +1,49 @@
 version: '3.4'
 
+networks: 
+  rmoff_kafka:
+    name: rmoff_kafka
+
 services:
   bookingsystem.api:
     image: ${DOCKER_REGISTRY-}bookingsystemapi
     environment:
       ConnectionStrings__DbConnection: "Server = database; Port = 5432; Database = BookingSystemDB; User Id = postgres; Password = postgres"
+    networks: 
+      - rmoff_kafka
     build:
       context: .
       dockerfile: BookingSystem.Api/Dockerfile
 
   zookeeper:
-    image: docker.io/bitnami/zookeeper:3.9
+    image: confluentinc/cp-zookeeper:5.5.0
+    container_name: zookeeper
+    networks: 
+      - rmoff_kafka
     environment:
-        ALLOW_ANONYMOUS_LOGIN: yes
+      ZOOKEEPER_CLIENT_PORT: 2181
 
   message_broker:
-    image: ${DOCKER_REGISTRY-}bitnami/kafka
-    environment:
-        KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper
-        KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-        KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://message_broker:9092
-        KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-        # JMX_PORT: 9997
-        # KAFKA_CFG_PROCESS_ROLES: controller,broker
-        # KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    image: confluentinc/cp-kafka:5.5.0
+    container_name: broker
+    ports: 
+      - "19092:19092"
+    networks: 
+      - rmoff_kafka
     depends_on:
-        - zookeeper
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,CONNECTIONS_FROM_HOST://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafka_ui:
     container_name: kafka-ui
     image: ${DOCKER_REGISTRY-}provectuslabs/kafka-ui
+    networks: 
+      - rmoff_kafka
     ports:
         - 8080:8080
     environment:
@@ -44,6 +58,8 @@ services:
   database:
     image: postgres
     restart: always
+    networks: 
+      - rmoff_kafka
     environment:
       POSTGRES_DB: BookingSystemDB
       POSTGRES_USER: postgres

@@ -3,6 +3,9 @@ using BookingSystem.BL.Extensions;
 using BookingSystem.Api.Middlewares;
 using BookingSystem.Api.Middlewares.SerilogLogging;
 using Serilog;
+using BookingSystem.Api.Options;
+using MessageBus;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -18,6 +21,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(configuration);
 builder.Services.AddBlServices();
+
+builder.Services.Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
+
+var kafkaHost = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
+
+builder.Services.AddScoped(serviceProvider =>
+{
+    return new KafkaMessageBus(kafkaHost.Host);
+});
+
 
 var app = builder.Build();
 

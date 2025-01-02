@@ -19,6 +19,7 @@ namespace BookingSystem.BL.Extensions
             services.AddTransient<FlightFilterPipeline>();
             services.AddScoped<IFlightService, FlightService>();
             services.AddScoped<ISearchFlightsService, SearchFlightsService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             return services;
         }
