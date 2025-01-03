@@ -35,22 +35,22 @@ namespace BookingSystem.PaymentService.Api.Jobs
 
                 var paymentId = await _paymentClient.CreatePaymentAsync(1000);
 
-                var existedStatus = await _bookingContext.PaymentStatuses.FirstOrDefaultAsync(x => x.Id == message.Id);
+                //var existedStatus = await _bookingContext.PaymentStatuses.FirstOrDefaultAsync(x => x.Id == message.Id);
 
-                if (existedStatus == null)
+                //if (existedStatus == null)
+                //{
+                var paymentStatus = new PaymentStatus
                 {
-                    var paymentStatus = new PaymentStatus
-                    {
-                        Id = message.Id,
-                        FlightId = message.Flight.Id,
-                        Status = Status.Pending,
-                        PaymentId = paymentId,
-                        PaymentEndDate = DateTime.UtcNow.AddMinutes(10)
-                    };
+                    Id = Guid.NewGuid(),
+                    FlightId = message.Flight.Id,
+                    Status = Status.Pending,
+                    PaymentId = paymentId,
+                    PaymentEndDate = DateTime.UtcNow.AddMinutes(10)
+                };
 
-                    await _bookingContext.AddAsync(paymentStatus);
-                    await _bookingContext.SaveChangesAsync();
-                }
+                await _bookingContext.AddAsync(paymentStatus);
+                await _bookingContext.SaveChangesAsync();
+                //}
             }
         }
     }

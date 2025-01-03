@@ -54,7 +54,9 @@ namespace MessageBus
             if (messageFetchedFromTopic == null)
                 return null;
 
-            _consumer.Commit();
+            string message = messageFetchedFromTopic.Message.Value;
+
+            _consumer.Commit(messageFetchedFromTopic);
 
             return messageFetchedFromTopic.Message.Value;
         }
