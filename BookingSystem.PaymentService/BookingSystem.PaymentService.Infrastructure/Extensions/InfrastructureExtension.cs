@@ -1,0 +1,35 @@
+﻿using BookingSystem.PaymentService.Infrastructure.Data;
+using BookingSystem.PaymentService.Infrastructure.Mappings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace BookingSystem.PaymentService.Infrastructure.Extensions
+{
+    public static class InfrastructureExtension
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationManager config)
+        {
+            var connectionString = config.GetConnectionString("DbConnection");
+
+            services.AddAutoMapper(typeof(DataBaseMappings));
+
+            services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Применение миграций для контекста к базе данных.
+        /// </summary>
+        public static void DatabaseMigrate(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<BookingContext>();
+
+            if (db.Database.IsRelational())
+                db.Database.Migrate();
+        }
+
+    }
+}
