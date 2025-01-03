@@ -11,13 +11,13 @@ namespace BookingSystem.PaymentService.Infrastructure.Data.Repositories
         private readonly BookingContext _bookingContext;
         private readonly IMapper _mapper;
 
+        public IUnitOfWork UnitOfWork => _bookingContext;
+
         public TicketRepository(BookingContext bookingContext, IMapper mapper)
         {
             _bookingContext = bookingContext;
             _mapper = mapper;
         }
-
-        public IUnitOfWork UnitOfWork => _bookingContext;
 
         public async Task<Ticket> CreateAsync(Ticket ticket)
         {

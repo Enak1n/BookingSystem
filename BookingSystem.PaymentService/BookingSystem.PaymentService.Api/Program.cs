@@ -38,12 +38,18 @@ builder.Services.AddSingleton(serviceProvider =>
 
 builder.Services.AddQuartz(cfg =>
 {
-    var jobKey = new JobKey(nameof(GetRequestForPaymentJob));
+    var paymentJobKey = new JobKey(nameof(GetRequestForPaymentJob));
+    var checkPaymentJobKey = new JobKey(nameof(CheckPaymentJob));
 
-    cfg.AddJob<GetRequestForPaymentJob>(jobKey)
+    cfg.AddJob<GetRequestForPaymentJob>(paymentJobKey)
         .AddTrigger(t =>
-            t.ForJob(jobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
+            t.ForJob(paymentJobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
         );
+
+    cfg.AddJob<CheckPaymentJob>(checkPaymentJobKey)
+            .AddTrigger(t =>
+                t.ForJob(checkPaymentJobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(30).RepeatForever())
+            );
 });
 
 builder.Services.AddQuartzHostedService();

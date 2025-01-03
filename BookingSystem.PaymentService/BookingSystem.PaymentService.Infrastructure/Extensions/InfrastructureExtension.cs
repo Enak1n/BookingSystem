@@ -1,4 +1,7 @@
-﻿using BookingSystem.PaymentService.Infrastructure.Data;
+﻿using BookingSystem.PaymentService.Domain.SeedWork;
+using BookingSystem.PaymentService.Infrastructure.Data;
+using BookingSystem.PaymentService.Infrastructure.Data.Repositories;
+using BookingSystem.PaymentService.Infrastructure.Data.Repositories.Interfaces;
 using BookingSystem.PaymentService.Infrastructure.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +18,9 @@ namespace BookingSystem.PaymentService.Infrastructure.Extensions
             services.AddAutoMapper(typeof(DataBaseMappings));
 
             services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
+
+            services.AddScoped<IPaymentStatusRepository, PaymentStatusReopository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
 
             return services;
         }
