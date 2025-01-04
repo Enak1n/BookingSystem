@@ -1,8 +1,7 @@
 ﻿using BookingSystem.PaymentService.Api.Utils;
-using BookingSystem.PaymentService.Infrastructure.Data;
+using BookingSystem.PaymentService.BL.Services.Interfaces;
 using BookingSystem.PaymentService.Infrastructure.Data.Repositories.Interfaces;
 using MessageBus;
-using Microsoft.EntityFrameworkCore;
 using Quartz;
 
 namespace BookingSystem.PaymentService.Api.Jobs
@@ -12,15 +11,17 @@ namespace BookingSystem.PaymentService.Api.Jobs
         private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly ILogger<CheckPaymentJob> _logger;
         private readonly KafkaMessageBus _messageBus;
+        private readonly ITicketService _ticketService;
         private readonly PaymentClient _paymentClient;
 
         public CheckPaymentJob(ILogger<CheckPaymentJob> logger, KafkaMessageBus messageBus,
-            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient)
+            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, ITicketService ticketService)
         {
             _paymentStatusRepository = paymentStatusRepository;
             _logger = logger;
             _messageBus = messageBus;
             _paymentClient = paymentClient;
+            _ticketService = ticketService;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -35,7 +36,9 @@ namespace BookingSystem.PaymentService.Api.Jobs
                 var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
 
                 if (paymentResult)
+                {
                     payment.Status = Status.Paid;
+                }
             });
 
             await _paymentStatusRepository.UnitOfWork.SaveChangesAsync();

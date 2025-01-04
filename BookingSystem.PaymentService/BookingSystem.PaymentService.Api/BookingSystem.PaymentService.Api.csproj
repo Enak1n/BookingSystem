@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookingSystem.PaymentService.Infrastructure\BookingSystem.PaymentService.Infrastructure.csproj" />
+    <ProjectReference Include="..\BookingSystem.PaymentService.BL\BookingSystem.PaymentService.BL.csproj" />
     <ProjectReference Include="..\MessageBus\MessageBus.csproj" />
   </ItemGroup>
 

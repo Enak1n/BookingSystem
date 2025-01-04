@@ -7,6 +7,7 @@ using BookingSystem.PaymentService.Api.Middlewares;
 using Quartz;
 using BookingSystem.PaymentService.Api.Jobs;
 using BookingSystem.PaymentService.Api.Utils;
+using BookingSystem.PaymentService.BL.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -23,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(configuration);
+builder.Services.AddBlServices();
 
 builder.Services.Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
 builder.Services.Configure<YooKassaSettings>(configuration.GetSection(nameof(YooKassaSettings)));

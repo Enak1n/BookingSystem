@@ -19,7 +19,7 @@ namespace BookingSystem.PaymentService.Infrastructure.Data.Repositories
             _mapper = mapper;
         }
 
-        public async Task<Ticket> CreateAsync(Ticket ticket)
+        public async Task<Ticket> CreateAsync(Ticket ticket, Guid flightId)
         {
             var ticketEntity = new TicketEntity
             {
@@ -31,6 +31,7 @@ namespace BookingSystem.PaymentService.Infrastructure.Data.Repositories
                     Patronymic = ticket.Passenger.Patronymic,
                     Surname = ticket.Passenger.Surname,
                 },
+                FlightId = flightId,
                 Seat = 1,
             };
 

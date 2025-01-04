@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.PaymentServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus", "MessageBus\MessageBus.csproj", "{AA19F170-7CAB-4738-8041-C1CB2B77A12F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.PaymentService.BL", "BookingSystem.PaymentService.BL\BookingSystem.PaymentService.BL.csproj", "{FDC5E5B4-B08E-4336-BC0E-8D447DD08830}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AA19F170-7CAB-4738-8041-C1CB2B77A12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA19F170-7CAB-4738-8041-C1CB2B77A12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA19F170-7CAB-4738-8041-C1CB2B77A12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDC5E5B4-B08E-4336-BC0E-8D447DD08830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDC5E5B4-B08E-4336-BC0E-8D447DD08830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDC5E5B4-B08E-4336-BC0E-8D447DD08830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDC5E5B4-B08E-4336-BC0E-8D447DD08830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

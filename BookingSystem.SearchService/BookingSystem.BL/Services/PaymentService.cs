@@ -1,6 +1,5 @@
 ﻿using BookingSystem.BL.Models;
 using BookingSystem.BL.Services.Interfaces;
-using BookingSystem.Infrastructure.Data;
 using BookingSystem.Infrastructure.Entities.Outbox;
 using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
 using Newtonsoft.Json;
