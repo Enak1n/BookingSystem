@@ -1,4 +1,5 @@
 ﻿using BookingSystem.Infrastructure.Data;
+using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
 using MessageBus;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
@@ -7,23 +8,21 @@ namespace BookingSystem.Api.Jobs
 {
     public class SendPaymentMessagesJob : IJob
     {
-        // TODO: переделать на репозиторий
-        private readonly BookingContext _bookingContext;
+        private readonly IMessageRepository _messageRepository;
         private readonly KafkaMessageBus _messageBus;
         private readonly ILogger<SendPaymentMessagesJob> _logger;
 
-        public SendPaymentMessagesJob(BookingContext bookingContext, KafkaMessageBus messageBus,
+        public SendPaymentMessagesJob(IMessageRepository messageRepository, KafkaMessageBus messageBus,
             ILogger<SendPaymentMessagesJob> logger)
         {
-            _bookingContext = bookingContext;
+            _messageRepository = messageRepository;
             _messageBus = messageBus;
             _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var messages = await _bookingContext.Messages.Where(x => x.Status == Status.Created)
-                                                                .ToListAsync(context.CancellationToken);
+            var messages = await _messageRepository.GetByStatusAsync(Status.Created);
 
             foreach (var message in messages) 
             {
@@ -38,7 +37,7 @@ namespace BookingSystem.Api.Jobs
                 }
             }
 
-            await _bookingContext.SaveChangesAsync();
+            await _messageRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

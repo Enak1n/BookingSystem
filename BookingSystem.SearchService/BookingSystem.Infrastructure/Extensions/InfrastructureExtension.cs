@@ -2,6 +2,8 @@
 using BookingSystem.Infrastructure.Data;
 using BookingSystem.Infrastructure.Data.Repositories;
 using BookingSystem.Infrastructure.Mappings;
+using BookingSystem.SearchService.Infrastructure.Data.Repositories;
+using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ namespace BookingSystem.Infrastructure.Extensions
             services.AddScoped<IPlaneRepository, PlaneRepository>();
             services.AddScoped<IAirportRepository, AirportRepository>();
             services.AddScoped<IFlightRepository, FlightRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
 

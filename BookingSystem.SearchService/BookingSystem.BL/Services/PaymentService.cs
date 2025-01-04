@@ -2,21 +2,18 @@
 using BookingSystem.BL.Services.Interfaces;
 using BookingSystem.Infrastructure.Data;
 using BookingSystem.Infrastructure.Entities.Outbox;
-using Microsoft.Extensions.Configuration;
+using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
 using Newtonsoft.Json;
 
 namespace BookingSystem.BL.Services
 {
     public class PaymentService : IPaymentService
     {
-        // TODO: Переделать на репозиторий
-        private readonly BookingContext _bookingContext;
-        private readonly IConfiguration _configuration;
+        private readonly IMessageRepository _messageRepository;
 
-        public PaymentService(BookingContext bookingContext, IConfiguration configuration)
+        public PaymentService(IMessageRepository messageRepository)
         {
-            _bookingContext = bookingContext;
-            _configuration = configuration;
+            _messageRepository = messageRepository;
         }
 
         public async Task CreatePayment(CreatePaymentDto createPaymentDto)
@@ -30,8 +27,8 @@ namespace BookingSystem.BL.Services
                 Status = Status.Created
             };
 
-            await _bookingContext.Messages.AddAsync(message);
-            await _bookingContext.SaveChangesAsync();      
+            await _messageRepository.AddAsync(message);
+            await _messageRepository.UnitOfWork.SaveChangesAsync();      
         }
     }
 }
