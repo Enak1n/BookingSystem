@@ -38,29 +38,46 @@ namespace BookingSystem.PaymentService.Api.Jobs
 
             await Parallel.ForEachAsync(payments, async (payment, _) =>
             {
-                if (DateTime.UtcNow > payment.PaymentEndDate)
-                    payment.Status = Status.Canceled;
-
-                var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
-
-                if (paymentResult)
-                {
-                    var res = await _cache.GetStringAsync(payment.PaymentId);
-
-                    if (res is null)
-                        return;
-
-                    var deserializedObject = JsonConvert.DeserializeObject<CreatePaymentMessageDto>(res);
-
-                    var passenger = Passenger.Create(deserializedObject.Passenger.Name, deserializedObject.Passenger.Surname,
-                        deserializedObject.Passenger.Patronymic, deserializedObject.Passenger.Email);
-
-                    await _ticketService.AddAsync(passenger, payment.FlightId);
-                    payment.Status = Status.Paid;
-                }
+                await ProcessPaymentAsync(payment);
             });
 
             await _paymentStatusRepository.UnitOfWork.SaveChangesAsync();
+        }
+
+        private async Task ProcessPaymentAsync(PaymentStatus payment)
+        {
+            if (DateTime.UtcNow > payment.PaymentEndDate)
+            {
+                payment.Status = Status.Canceled;
+                return;
+            }
+
+            var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
+            if (!paymentResult)
+                return;
+
+            var cachedData = await _cache.GetStringAsync(payment.PaymentId);
+            if (cachedData is null)
+            {
+                _logger.LogWarning("Платеж {PaymentId} не найден в кэше", payment.PaymentId);
+                return;
+            }
+
+            var paymentDto = JsonConvert.DeserializeObject<CreatePaymentMessageDto>(cachedData);
+            if (paymentDto is null)
+            {
+                _logger.LogError("Не удалось десериализовать данные для платежа {PaymentId}", payment.PaymentId);
+                return;
+            }
+
+            var passenger = Passenger.Create(
+                paymentDto.Passenger.Name,
+                paymentDto.Passenger.Surname,
+                paymentDto.Passenger.Patronymic,
+                paymentDto.Passenger.Email);
+
+            await _ticketService.AddAsync(passenger, payment.FlightId);
+            payment.Status = Status.Paid;
         }
     }
 }
