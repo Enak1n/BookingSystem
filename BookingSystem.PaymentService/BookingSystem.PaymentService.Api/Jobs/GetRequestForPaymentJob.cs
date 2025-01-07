@@ -3,6 +3,7 @@ using BookingSystem.PaymentService.Api.Utils;
 using BookingSystem.PaymentService.Infrastructure.Data.Repositories.Interfaces;
 using BookingSystem.PaymentService.Infrastructure.Entities;
 using MessageBus;
+using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Quartz;
 
@@ -14,14 +15,16 @@ namespace BookingSystem.PaymentService.Api.Jobs
         private readonly ILogger<GetRequestForPaymentJob> _logger;
         private readonly KafkaMessageBus _messageBus;
         private readonly PaymentClient _paymentClient;
+        private readonly IDistributedCache _cache;
 
         public GetRequestForPaymentJob(ILogger<GetRequestForPaymentJob> logger, KafkaMessageBus messageBus,
-            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient)
+            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, IDistributedCache cache)
         {
             _logger = logger;
             _messageBus = messageBus;
             _paymentStatusRepository = paymentStatusRepository;
             _paymentClient = paymentClient;
+            _cache = cache;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -42,6 +45,11 @@ namespace BookingSystem.PaymentService.Api.Jobs
                     PaymentId = paymentId,
                     PaymentEndDate = DateTime.UtcNow.AddMinutes(10)
                 };
+
+                await _cache.SetStringAsync(paymentId, messageJson, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
 
                 await _paymentStatusRepository.AddAsync(paymentStatus);
                 await _paymentStatusRepository.UnitOfWork.SaveChangesAsync();

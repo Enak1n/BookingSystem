@@ -14,6 +14,7 @@ namespace BookingSystem.PaymentService.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationManager config)
         {
             var connectionString = config.GetConnectionString("DbConnection");
+            var redisConnection = config.GetSection("Redis");
 
             services.AddAutoMapper(typeof(DataBaseMappings));
 
@@ -21,6 +22,12 @@ namespace BookingSystem.PaymentService.Infrastructure.Extensions
 
             services.AddScoped<IPaymentStatusRepository, PaymentStatusReopository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnection.GetSection("Connection").Value;
+                options.InstanceName = "local";
+            });
 
             return services;
         }

@@ -9,6 +9,7 @@ services:
     image: ${DOCKER_REGISTRY-}bookingsystemapi
     environment:
       ConnectionStrings__DbConnection: "Server = database; Port = 5432; Database = BookingSystemDB; User Id = postgres; Password = postgres"
+      Redis__Connection: "redis:6379"
     networks: 
       - rmoff_kafka
     build:
@@ -67,3 +68,21 @@ services:
     ports:
       - 5433:5432
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    networks: 
+      - rmoff_kafka
+    ports:
+      - 6379:6379
+
+  redis_ui:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - 5540:5540
+    networks:
+      - rmoff_kafka
+    depends_on:
+      - redis

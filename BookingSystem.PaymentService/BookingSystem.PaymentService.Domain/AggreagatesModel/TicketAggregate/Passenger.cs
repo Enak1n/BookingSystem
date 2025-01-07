@@ -21,7 +21,7 @@ namespace BookingSystem.PaymentService.Domain.TicketAggregate
             Email = email;
         }
 
-        public Passenger Create(string name, string surname, string? patronymic, string email)
+        public static Passenger Create(string name, string surname, string? patronymic, string email)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(surname))
                 throw new DomainException("Проверьте правильность введеных данных!");

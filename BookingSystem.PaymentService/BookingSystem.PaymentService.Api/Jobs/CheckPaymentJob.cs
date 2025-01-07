@@ -1,7 +1,12 @@
-﻿using BookingSystem.PaymentService.Api.Utils;
+﻿using BookingSystem.PaymentService.Api.DTO;
+using BookingSystem.PaymentService.Api.Utils;
 using BookingSystem.PaymentService.BL.Services.Interfaces;
+using BookingSystem.PaymentService.Domain.TicketAggregate;
 using BookingSystem.PaymentService.Infrastructure.Data.Repositories.Interfaces;
+using BookingSystem.PaymentService.Infrastructure.Entities;
 using MessageBus;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using Quartz;
 
 namespace BookingSystem.PaymentService.Api.Jobs
@@ -13,15 +18,18 @@ namespace BookingSystem.PaymentService.Api.Jobs
         private readonly KafkaMessageBus _messageBus;
         private readonly ITicketService _ticketService;
         private readonly PaymentClient _paymentClient;
+        private readonly IDistributedCache _cache;
 
         public CheckPaymentJob(ILogger<CheckPaymentJob> logger, KafkaMessageBus messageBus,
-            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, ITicketService ticketService)
+            IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, ITicketService ticketService,
+            IDistributedCache cache)
         {
             _paymentStatusRepository = paymentStatusRepository;
             _logger = logger;
             _messageBus = messageBus;
             _paymentClient = paymentClient;
             _ticketService = ticketService;
+            _cache = cache;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -37,6 +45,17 @@ namespace BookingSystem.PaymentService.Api.Jobs
 
                 if (paymentResult)
                 {
+                    var res = await _cache.GetStringAsync(payment.PaymentId);
+
+                    if (res is null)
+                        return;
+
+                    var deserializedObject = JsonConvert.DeserializeObject<CreatePaymentMessageDto>(res);
+
+                    var passenger = Passenger.Create(deserializedObject.Passenger.Name, deserializedObject.Passenger.Surname,
+                        deserializedObject.Passenger.Patronymic, deserializedObject.Passenger.Email);
+
+                    await _ticketService.AddAsync(passenger, payment.FlightId);
                     payment.Status = Status.Paid;
                 }
             });
