@@ -1,5 +1,4 @@
-﻿using BookingSystem.Domain.AggregatesModel.PlaceAggregate;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
+﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 using BookingSystem.Domain.SeedWork;
 
@@ -26,6 +25,26 @@ namespace BookingSystem.BL.Services
             var flight = await _flightRepository.GetByIdAsync(id);
             
             return flight;
+        }
+
+        public async Task TakeASeat(Guid flightId)
+        {
+            var flight = await _flightRepository.GetByIdAsync(flightId);
+
+            flight.TakeASeat();
+
+            await _flightRepository.UpdateAsync(flight);
+            await _flightRepository.UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task ReturnASeat(Guid flightId)
+        {
+            var flight = await _flightRepository.GetByIdAsync(flightId);
+
+            flight.ReturnASeat();
+
+            await _flightRepository.UpdateAsync(flight);
+            await _flightRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -7,5 +7,6 @@ namespace BookingSystem.Domain.SeedWork
         Task<List<Flight>> GetAllAsync(CancellationToken cancellationToken);
         Task<Flight> GetByIdAsync(Guid id);
         Task<List<Flight>> FindAsync(string departurePoint, string destinationPoint, DateTime departureDate);
+        Task UpdateAsync(Flight entity);
     }
 }

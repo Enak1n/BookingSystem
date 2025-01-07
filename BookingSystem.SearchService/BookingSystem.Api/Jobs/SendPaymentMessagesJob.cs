@@ -1,7 +1,5 @@
-﻿using BookingSystem.Infrastructure.Data;
-using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
+﻿using BookingSystem.SearchService.Infrastructure.Data.Repositories.Interfaces;
 using MessageBus;
-using Microsoft.EntityFrameworkCore;
 using Quartz;
 
 namespace BookingSystem.Api.Jobs

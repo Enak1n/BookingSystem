@@ -20,6 +20,14 @@ namespace BookingSystem.Api.Controllers
             _searchFlightsService = searchFlightsService;
         }
 
+        [HttpGet("test")]
+        public async Task<IActionResult> Test(Guid flightId)
+        {
+            await _flightService.TakeASeat(flightId);
+
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> FindFlights([FromQuery] FindFlightsRequest findFlights)
         {

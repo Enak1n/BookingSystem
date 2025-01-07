@@ -39,7 +39,7 @@ namespace BookingSystem.Infrastructure.Data.Repositories
 
         public async Task<Flight> GetByIdAsync(Guid id)
         {
-            var flightEntity = await _bookingContext.Flights.AsNoTracking()
+            var flightEntity = await _bookingContext.Flights
                 .Include(x => x.DepartureAirport)
                 .Include(x => x.DestinationAirport)
                 .Include(x => x.Plane)
@@ -48,6 +48,14 @@ namespace BookingSystem.Infrastructure.Data.Repositories
             var flight = _mapper.Map<Flight>(flightEntity);
 
             return flight;
+        }
+
+        public async Task UpdateAsync(Flight entity)
+        {
+            await _bookingContext.Flights.Where(x => x.Id == entity.Id)
+                .ExecuteUpdateAsync(f =>
+                f.SetProperty(x => x.EmptyPlaces, entity.EmptyPlaces)
+                .SetProperty(x => x.DepartureDate, entity.DepartureDate));
         }
     }
 }
