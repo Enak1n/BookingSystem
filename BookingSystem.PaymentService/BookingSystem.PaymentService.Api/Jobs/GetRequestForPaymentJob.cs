@@ -35,12 +35,12 @@ namespace BookingSystem.PaymentService.Api.Jobs
             {
                 var message = JsonConvert.DeserializeObject<CreatePaymentMessageDto>(messageJson);
 
-                var paymentId = await _paymentClient.CreatePaymentAsync(1000);
+                var paymentId = await _paymentClient.CreatePaymentAsync(message.Price);
 
                 var paymentStatus = new PaymentStatus
                 {
                     Id = Guid.NewGuid(),
-                    FlightId = message.Flight.Id,
+                    FlightId = message.FlightId,
                     Status = Status.Pending,
                     PaymentId = paymentId,
                     PaymentEndDate = DateTime.UtcNow.AddMinutes(10)

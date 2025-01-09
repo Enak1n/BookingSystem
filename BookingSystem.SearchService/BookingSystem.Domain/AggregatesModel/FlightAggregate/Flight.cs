@@ -14,6 +14,7 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
         public Plane Plane { get; private set; }
 
         public int EmptyPlaces { get; private set; }
+        public int Price { get; private set; }
 
         public DateTime DepartureDate { get; private set; }
 
@@ -23,7 +24,7 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 
         private Flight(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate,
             Airport departureAirport, Airport destinationAirport,
-            string numberOfTheFlight)
+            string numberOfTheFlight, int price)
         {
             DeparturePoint = departurePoint;
             DestinationPoint = destinationPoint;
@@ -33,10 +34,11 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
             DepartureAirport = departureAirport;
             DestinatioAirport = destinationAirport;
             NumberOfTheFlight = numberOfTheFlight;
+            Price = price;
         }
 
         public static Flight Create(string departurePoint, string destinationPoint, Plane plane, DateTime departureDate,
-            Airport departureAirport, Airport destinationAirport, string numberOfTheFlight)
+            Airport departureAirport, Airport destinationAirport, string numberOfTheFlight, int price)
         {
             if (string.IsNullOrEmpty(departurePoint))
                 throw new DomainException("Пункт отправления не может быть пустым!");
@@ -50,7 +52,10 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
             if (departureDate < DateTime.UtcNow.AddDays(3) && departureDate < DateTime.UtcNow)
                 throw new DomainException("Проверьте правильность выбора даты полета");
 
-            return new Flight(departurePoint, destinationPoint, plane, departureDate, departureAirport, destinationAirport, numberOfTheFlight);
+            if (price < 0)
+                throw new DomainException("Цена не может быть меньше 0!");
+
+            return new Flight(departurePoint, destinationPoint, plane, departureDate, departureAirport, destinationAirport, numberOfTheFlight, price);
         }
 
         public void ChangeDepartureDate(DateTime newDepartureTime)
@@ -64,17 +69,15 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
         public void TakeASeat()
         {
             if (EmptyPlaces < 0)
-                throw new DomainException("Свободные места закончились!");    
-                
+                throw new DomainException("Свободные места закончились!");
+
             EmptyPlaces -= 1;
         }
 
         public void ReturnASeat()
         {
-            if (EmptyPlaces + 1 > Plane.PassengersCount)
-                throw new DomainException("Свободных мест становится больше чем мест в самолете!");
-
-            EmptyPlaces += 1;
+            if (EmptyPlaces + 1 < Plane.PassengersCount)
+                EmptyPlaces += 1;
         }
     }
 }

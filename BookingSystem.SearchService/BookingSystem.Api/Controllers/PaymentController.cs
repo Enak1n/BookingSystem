@@ -1,5 +1,5 @@
-﻿using BookingSystem.BL.Models;
-using BookingSystem.BL.Services.Interfaces;
+﻿using BookingSystem.BL.Services.Interfaces;
+using BookingSystem.SearchService.Api.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingSystem.Api.Controllers
@@ -18,7 +18,7 @@ namespace BookingSystem.Api.Controllers
         [HttpPost("createPayment")]
         public async Task<IActionResult> Test(CreatePaymentDto createPaymentDto)
         {
-            await _paymentService.CreatePayment(createPaymentDto);
+            await _paymentService.CreatePayment(createPaymentDto.FlightId, createPaymentDto.Passenger);
 
             return Ok();
         }

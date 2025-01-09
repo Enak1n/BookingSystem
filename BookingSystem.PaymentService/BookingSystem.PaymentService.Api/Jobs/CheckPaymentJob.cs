@@ -46,15 +46,16 @@ namespace BookingSystem.PaymentService.Api.Jobs
 
         private async Task ProcessPaymentAsync(PaymentStatus payment)
         {
-            if (DateTime.UtcNow > payment.PaymentEndDate)
+            var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
+
+            if (!paymentResult)
+                return;
+
+            if (DateTime.UtcNow > payment.PaymentEndDate && !paymentResult)
             {
                 payment.Status = Status.Canceled;
                 return;
             }
-
-            var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
-            if (!paymentResult)
-                return;
 
             var cachedData = await _cache.GetStringAsync(payment.PaymentId);
             if (cachedData is null)

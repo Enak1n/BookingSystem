@@ -1,9 +1,10 @@
 ﻿using BookingSystem.BL.Models;
+using BookingSystem.SearchService.BL.Models;
 
 namespace BookingSystem.BL.Services.Interfaces
 {
     public interface IPaymentService
     {
-        Task CreatePayment(CreatePaymentDto createPaymentDto);
+        Task CreatePayment(Guid flightId, PassengerBrokerDto passenger);
     }
 }
