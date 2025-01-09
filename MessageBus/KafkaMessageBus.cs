@@ -33,9 +33,10 @@ namespace MessageBus
 
         public async Task SendMessage(string topic, string message)
         {
+            var random = new Random();
             var newMessage = new Message<int, string>
             {
-                Key = 1,
+                Key = random.Next(0, 5),
                 Value = message,
                 Headers = null
             };
