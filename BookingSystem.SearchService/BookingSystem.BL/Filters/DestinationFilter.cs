@@ -1,19 +1,18 @@
 ﻿using BookingSystem.BL.Models;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.BL.Filters
 {
     public class DestinationFilter : IFlightFilter
     {
-        public async Task<List<FlightDto>> FilterFlights(List<FlightDto> query, FlightFilterParams filterParams)
+        public List<FlightDto> FilterFlights(List<FlightDto> query, FlightFilterParams filterParams)
         {
+            var flights = new List<FlightDto>(query);
             if (!string.IsNullOrEmpty(filterParams.Destination))
             {
-                query = query.Where(f => f.DestinationPoint.Contains(filterParams.Destination)).ToList();
+                flights = query.Where(f => f.DestinationPoint.Contains(filterParams.Destination)).ToList();
             }
 
-            return query;
+            return flights;
         }
     }
 }

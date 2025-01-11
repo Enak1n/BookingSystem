@@ -14,7 +14,6 @@ namespace BookingSystem.BL.Services
     {
         private readonly IMessageRepository _messageRepository;
         private readonly IFlightService _flightService;
-        private readonly IFlightRepository _flightRepository; 
         private readonly ILogger<PaymentService> _logger;
 
         public PaymentService(IMessageRepository messageRepository, IFlightService flightService,
@@ -23,12 +22,11 @@ namespace BookingSystem.BL.Services
             _messageRepository = messageRepository;
             _flightService = flightService;
             _logger = logger;
-            _flightRepository = flightRepository;
         }
 
         public async Task CreatePayment(Guid flightId, PassengerBrokerDto passenger)
         {
-            var flight = await _flightRepository.GetByIdAsync(flightId);
+            var flight = await _flightService.GetInfoAboutFlightAsync(flightId);
 
             if (flight is null)
                 throw new ArgumentNullException("Не удалось найти указанный рейс!");

@@ -5,6 +5,6 @@ namespace BookingSystem.BL.Filters
 {
     public interface IFlightFilter
     {
-        Task<List<FlightDto>> FilterFlights(List<FlightDto> query, FlightFilterParams filterParams);
+        List<FlightDto> FilterFlights(List<FlightDto> query, FlightFilterParams filterParams);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using BookingSystem.BL.Filters;
 using BookingSystem.BL.Models;
 using BookingSystem.BL.Services.Interfaces;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.BL.Services
 {

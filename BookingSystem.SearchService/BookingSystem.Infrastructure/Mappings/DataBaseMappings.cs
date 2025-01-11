@@ -12,12 +12,7 @@ namespace BookingSystem.Infrastructure.Mappings
         {
             CreateMap<PlaneEntity, Plane>();
 
-            CreateMap<FlightEntity, Flight>()
-                .ForMember(dest => dest.DeparturePoint, opt => opt.MapFrom(src => src.DeparturePoint))
-                .ForMember(dest => dest.DestinationPoint, opt => opt.MapFrom(src => src.DestinationPoint))
-                .ForMember(dest => dest.Plane, opt => opt.MapFrom(src => src.Plane)) // PlaneEntity → Plane
-                .ForMember(dest => dest.EmptyPlaces, opt => opt.MapFrom(src => src.EmptyPlaces))
-                .ForMember(dest => dest.DepartureDate, opt => opt.MapFrom(src => src.DepartureDate));
+            CreateMap<FlightEntity, Flight>();
 
             CreateMap<AirportEntity, Airport>();
             CreateMap<CountryEntity, Country>();

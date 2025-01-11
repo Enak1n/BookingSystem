@@ -1,5 +1,4 @@
 ﻿using BookingSystem.BL.Models;
-using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 
 namespace BookingSystem.BL.Filters
 {
@@ -14,11 +13,14 @@ namespace BookingSystem.BL.Filters
 
         public async Task<List<FlightDto>> ApplyFilters(List<FlightDto> query, FlightFilterParams filterParams)
         {
+            var flights = new List<FlightDto>(query);
+
             foreach (var filter in _filters)
             {
-                query = await filter.FilterFlights(query, filterParams);
+                flights = filter.FilterFlights(query, filterParams);
             }
-            return query;
+
+            return flights;
         }
     }
 }

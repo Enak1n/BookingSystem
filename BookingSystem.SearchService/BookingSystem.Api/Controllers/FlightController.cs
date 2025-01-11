@@ -4,6 +4,7 @@ using BookingSystem.BL.Models;
 using BookingSystem.BL.Services.Interfaces;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 using Microsoft.AspNetCore.Mvc;
+using BookingSystem.SearchService.Api.Extensions;
 
 namespace BookingSystem.Api.Controllers
 {
@@ -25,13 +26,7 @@ namespace BookingSystem.Api.Controllers
         {
             var flights = await _flightService.FindFlightsAsync(findFlights.DeparturePoint, findFlights.DestinationPoint, findFlights.DeparturedDate);
 
-            var res = flights.Select(x => new FlightDto
-            {
-                Id = x.Id,
-                DepartureDate = x.DepartureDate,
-                DeparturePoint = x.DeparturePoint,
-                DestinationPoint = x.DestinationPoint,
-            });
+            var res = flights.Select(flight => flight.ToDto());
 
             return Ok(res);
         }
@@ -49,7 +44,9 @@ namespace BookingSystem.Api.Controllers
         {
             var flight = await _flightService.GetInfoAboutFlightAsync(id);
 
-            return Ok(flight);
+            var res = flight.ToDto();
+
+            return Ok(res);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate;
-using BookingSystem.SearchService.BL.Models;
+﻿using BookingSystem.SearchService.BL.Models;
 
 namespace BookingSystem.BL.Models
 {
