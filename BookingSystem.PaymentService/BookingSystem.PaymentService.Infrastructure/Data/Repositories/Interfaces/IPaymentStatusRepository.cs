@@ -8,6 +8,7 @@ namespace BookingSystem.PaymentService.Infrastructure.Data.Repositories.Interfac
     {
         Task<List<PaymentStatus>> GetAllAsync(CancellationToken cancellationToken);
         Task AddAsync(PaymentStatus paymentStatus);
+        Task AddRangeAsync(List<PaymentStatus> paymentStatuses);
         Task<List<PaymentStatus>> GetByStatusAsyn(Status status);
     }
 }

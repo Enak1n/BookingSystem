@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using System;
 
 namespace MessageBus
 {
@@ -37,9 +38,10 @@ namespace MessageBus
 
         public async Task SendMessage(string topic, string message)
         {
+            var random = new Random();
             var newMessage = new Message<int, string>
             {
-                Key = 1,
+                Key = random.Next(0, 5),
                 Value = message,
                 Headers = null
             };
@@ -49,7 +51,7 @@ namespace MessageBus
 
         public async Task<string?> ConsumeMessage(string topic)
         {
-            var messageFetchedFromTopic = _consumer.Consume(TimeSpan.FromSeconds(10));
+            var messageFetchedFromTopic = _consumer.Consume(TimeSpan.FromSeconds(1));
 
             if (messageFetchedFromTopic == null)
                 return null;
@@ -57,7 +59,6 @@ namespace MessageBus
             string message = messageFetchedFromTopic.Message.Value;
 
             _consumer.Commit(messageFetchedFromTopic);
-
             return messageFetchedFromTopic.Message.Value;
         }
 

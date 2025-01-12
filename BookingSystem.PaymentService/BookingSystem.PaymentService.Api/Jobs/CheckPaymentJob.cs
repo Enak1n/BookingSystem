@@ -15,18 +15,16 @@ namespace BookingSystem.PaymentService.Api.Jobs
     {
         private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly ILogger<CheckPaymentJob> _logger;
-        private readonly KafkaMessageBus _messageBus;
         private readonly ITicketService _ticketService;
         private readonly PaymentClient _paymentClient;
         private readonly IDistributedCache _cache;
 
-        public CheckPaymentJob(ILogger<CheckPaymentJob> logger, KafkaMessageBus messageBus,
+        public CheckPaymentJob(ILogger<CheckPaymentJob> logger,
             IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, ITicketService ticketService,
             IDistributedCache cache)
         {
             _paymentStatusRepository = paymentStatusRepository;
             _logger = logger;
-            _messageBus = messageBus;
             _paymentClient = paymentClient;
             _ticketService = ticketService;
             _cache = cache;
@@ -60,14 +58,14 @@ namespace BookingSystem.PaymentService.Api.Jobs
             var cachedData = await _cache.GetStringAsync(payment.PaymentId);
             if (cachedData is null)
             {
-                _logger.LogWarning("Платеж {PaymentId} не найден в кэше", payment.PaymentId);
+                _logger.LogWarning($"Платеж {payment.PaymentId} не найден в кэше");
                 return;
             }
 
             var paymentDto = JsonConvert.DeserializeObject<CreatePaymentMessageDto>(cachedData);
             if (paymentDto is null)
             {
-                _logger.LogError("Не удалось десериализовать данные для платежа {PaymentId}", payment.PaymentId);
+                _logger.LogError($"Не удалось десериализовать данные для платежа {payment.PaymentId}");
                 return;
             }
 

@@ -34,5 +34,10 @@ namespace BookingSystem.PaymentService.Infrastructure.Data.Repositories
 
             return statuses;
         }
+
+        public async Task AddRangeAsync(List<PaymentStatus> paymentStatuses)
+        {
+            await _bookingContext.AddRangeAsync(paymentStatuses);
+        }
     }
 }

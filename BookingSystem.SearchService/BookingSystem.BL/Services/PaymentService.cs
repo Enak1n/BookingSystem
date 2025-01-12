@@ -41,23 +41,15 @@ namespace BookingSystem.BL.Services
 
             var json = JsonConvert.SerializeObject(paymentDto);
 
-            try
+            var message = new BrokerMessage
             {
-                var message = new BrokerMessage
-                {
-                    Id = Guid.NewGuid(),
-                    Message = json,
-                    Status = Status.Created
-                };
+                Id = Guid.NewGuid(),
+                Message = json,
+                Status = Status.Created
+            };
 
-                await _flightService.TakeASeat(paymentDto.FlightId);
-                await _messageRepository.AddAsync(message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Ошибка при бронирование места!");
-                await _flightService.ReturnASeat(paymentDto.FlightId);
-            }
+            await _flightService.TakeASeat(paymentDto.FlightId);
+            await _messageRepository.AddAsync(message);
 
             await _messageRepository.UnitOfWork.SaveChangesAsync();
         }

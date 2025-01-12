@@ -68,7 +68,7 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 
         public void TakeASeat()
         {
-            if (EmptyPlaces < 0)
+            if (EmptyPlaces <= 0)
                 throw new DomainException("Свободные места закончились!");
 
             EmptyPlaces -= 1;
