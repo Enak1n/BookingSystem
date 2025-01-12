@@ -7,6 +7,7 @@ using BookingSystem.Api.Options;
 using MessageBus;
 using Quartz;
 using BookingSystem.Api.Jobs;
+using BookingSystem.SearchService.Api.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -35,11 +36,17 @@ builder.Services.AddSingleton(serviceProvider =>
 
 builder.Services.AddQuartz(cfg =>
 {
-    var jobKey = new JobKey(nameof(SendPaymentMessagesJob));
+    var sendPaymentJobKey = new JobKey(nameof(SendPaymentMessagesJob));
+    var cancelPaymentJobKey = new JobKey(nameof(CancelPaymentJob));
 
-    cfg.AddJob<SendPaymentMessagesJob>(jobKey)
+    cfg.AddJob<SendPaymentMessagesJob>(sendPaymentJobKey)
         .AddTrigger(t =>
-            t.ForJob(jobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
+            t.ForJob(sendPaymentJobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
+        );
+
+    cfg.AddJob<CancelPaymentJob>(cancelPaymentJobKey)
+        .AddTrigger(t =>
+            t.ForJob(cancelPaymentJobKey).WithSimpleSchedule(s => s.WithIntervalInSeconds(10).RepeatForever())
         );
 });
 

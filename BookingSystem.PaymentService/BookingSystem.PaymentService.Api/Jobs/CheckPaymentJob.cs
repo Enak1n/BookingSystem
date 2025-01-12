@@ -18,8 +18,9 @@ namespace BookingSystem.PaymentService.Api.Jobs
         private readonly ITicketService _ticketService;
         private readonly PaymentClient _paymentClient;
         private readonly IDistributedCache _cache;
+        private readonly KafkaMessageBus _messageBus;
 
-        public CheckPaymentJob(ILogger<CheckPaymentJob> logger,
+        public CheckPaymentJob(ILogger<CheckPaymentJob> logger, KafkaMessageBus messageBus,
             IPaymentStatusRepository paymentStatusRepository, PaymentClient paymentClient, ITicketService ticketService,
             IDistributedCache cache)
         {
@@ -28,6 +29,7 @@ namespace BookingSystem.PaymentService.Api.Jobs
             _paymentClient = paymentClient;
             _ticketService = ticketService;
             _cache = cache;
+            _messageBus = messageBus;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -46,12 +48,20 @@ namespace BookingSystem.PaymentService.Api.Jobs
         {
             var paymentResult = await _paymentClient.CheckPayment(payment.PaymentId);
 
-            if (!paymentResult)
-                return;
-
-            if (DateTime.UtcNow > payment.PaymentEndDate && !paymentResult)
+            if (DateTime.UtcNow > payment.PaymentEndDate)
             {
-                payment.Status = Status.Canceled;
+                if (!paymentResult)
+                {
+                    payment.Status = Status.Canceled;
+                    await _messageBus.SendMessage("cancelPayment", payment.FlightId.ToString());
+                    _logger.LogInformation($"Платеж {payment.PaymentId} отменен, так как истек срок оплаты.");
+                    return;
+                }
+            }
+
+            if (!paymentResult)
+            {
+                _logger.LogInformation($"Платеж {payment.PaymentId} пока не выполнен. Ожидание оплаты.");
                 return;
             }
 

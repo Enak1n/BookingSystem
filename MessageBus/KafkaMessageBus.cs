@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using System;
 
 namespace MessageBus
 {
@@ -15,13 +16,15 @@ namespace MessageBus
             _producerConfig = new ProducerConfig
             {
                 BootstrapServers = host,
-                Acks = Acks.All
+                Acks = Acks.All,
+
             };
 
             _consumerConfig = new ConsumerConfig
             {
-                GroupId = "custom-group",
+                GroupId = $"custom-group SearchService",
                 BootstrapServers = host,
+                EnableAutoCommit = false,
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
@@ -29,6 +32,8 @@ namespace MessageBus
                 .Build();
 
             _consumer = new ConsumerBuilder<int, string>(_consumerConfig).Build();
+
+            _consumer.Subscribe("cancelPayment");
         }
 
         public async Task SendMessage(string topic, string message)
@@ -46,15 +51,14 @@ namespace MessageBus
 
         public async Task<string?> ConsumeMessage(string topic)
         {
-            _consumer.Subscribe(topic);
-            await Task.Yield();
             var messageFetchedFromTopic = _consumer.Consume(TimeSpan.FromSeconds(1));
 
             if (messageFetchedFromTopic == null)
                 return null;
 
-            _consumer.Commit();
+            string message = messageFetchedFromTopic.Message.Value;
 
+            _consumer.Commit(messageFetchedFromTopic);
             return messageFetchedFromTopic.Message.Value;
         }
 

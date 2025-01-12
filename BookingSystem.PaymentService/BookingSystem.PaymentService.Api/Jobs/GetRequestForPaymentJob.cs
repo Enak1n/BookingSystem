@@ -29,7 +29,6 @@ namespace BookingSystem.PaymentService.Api.Jobs
         {
             var messages = new List<string>();
 
-            Console.WriteLine($"Start {DateTime.UtcNow} Thread {context.FireInstanceId}");
             while (true)
             {
                 var consumeResult = await _messageBus.ConsumeMessage("test");
@@ -72,8 +71,6 @@ namespace BookingSystem.PaymentService.Api.Jobs
                 await _paymentStatusRepository.AddRangeAsync(paymentStatuses);
                 await _paymentStatusRepository.UnitOfWork.SaveChangesAsync();
             }
-
-            Console.WriteLine($"End {DateTime.UtcNow} MessagesCount = {messages.Count} Thread {context.FireInstanceId}");
         }
     }
 }
