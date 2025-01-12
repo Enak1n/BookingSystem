@@ -7,6 +7,7 @@ namespace BookingSystem.BL.Services
     public class FlightService : IFlightService
     {
         private readonly IFlightRepository _flightRepository;
+        private readonly SemaphoreSlim _lock = new(1, 1);
 
         public FlightService(IFlightRepository flightRepository)
         {
@@ -39,12 +40,18 @@ namespace BookingSystem.BL.Services
 
         public async Task ReturnASeat(Guid flightId)
         {
-            var flight = await _flightRepository.GetByIdAsync(flightId);
-
-            flight.ReturnASeat();
-
-            await _flightRepository.UpdateAsync(flight);
-            await _flightRepository.UnitOfWork.SaveChangesAsync();
+            await _lock.WaitAsync();
+            try
+            {
+                var flight = await _flightRepository.GetByIdAsync(flightId);
+                flight.ReturnASeat();
+                await _flightRepository.UpdateAsync(flight);
+                await _flightRepository.UnitOfWork.SaveChangesAsync();
+            }
+            finally
+            {
+                _lock.Release();
+            }
         }
     }
 }

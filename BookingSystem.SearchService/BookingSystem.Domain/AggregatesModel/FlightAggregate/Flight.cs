@@ -76,7 +76,7 @@ namespace BookingSystem.Domain.AggregatesModel.TicketAggregate
 
         public void ReturnASeat()
         {
-            if (EmptyPlaces + 1 < Plane.PassengersCount)
+            if (EmptyPlaces < Plane.PassengersCount)
                 EmptyPlaces += 1;
         }
     }
