@@ -23,7 +23,10 @@ namespace BookingSystem.Infrastructure.Extensions
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
 
-            services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<BookingContext>(options => options.UseNpgsql(connectionString)
+                                                                    .EnableSensitiveDataLogging()
+                                                                    .LogTo(Console.WriteLine));
+
 
             return services;
         }

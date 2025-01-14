@@ -1,17 +1,19 @@
 ﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate;
 using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
 using BookingSystem.Domain.SeedWork;
+using BookingSystem.Infrastructure.Data;
 
 namespace BookingSystem.BL.Services
 {
     public class FlightService : IFlightService
     {
         private readonly IFlightRepository _flightRepository;
-        private readonly SemaphoreSlim _lock = new(1, 1);
+        private readonly BookingContext _bookingContext;
 
-        public FlightService(IFlightRepository flightRepository)
+        public FlightService(IFlightRepository flightRepository, BookingContext bookingContext)
         {
             _flightRepository = flightRepository;
+            _bookingContext = bookingContext;
         }
 
         public async Task<List<Flight>> FindFlightsAsync(string departurePoint, string destinationPoint, DateTime departureDate)
@@ -24,7 +26,7 @@ namespace BookingSystem.BL.Services
         public async Task<Flight> GetInfoAboutFlightAsync(Guid id)
         {
             var flight = await _flightRepository.GetByIdAsync(id);
-            
+
             return flight;
         }
 
@@ -40,18 +42,20 @@ namespace BookingSystem.BL.Services
 
         public async Task ReturnASeat(Guid flightId)
         {
-            await _lock.WaitAsync();
-            try
-            {
-                var flight = await _flightRepository.GetByIdAsync(flightId);
-                flight.ReturnASeat();
-                await _flightRepository.UpdateAsync(flight);
-                await _flightRepository.UnitOfWork.SaveChangesAsync();
-            }
-            finally
-            {
-                _lock.Release();
-            }
+            var flight = await _flightRepository.GetByIdAsync(flightId);
+
+            flight.ReturnASeat();
+
+            await _flightRepository.UpdateAsync(flight);
+            await _flightRepository.UnitOfWork.SaveChangesAsync();
+
+            var updated = await _flightRepository.GetByIdAsync(flightId);
+        }
+
+        public async Task UpdateFlightAsync(Flight flight)
+        {
+            await _flightRepository.UpdateAsync(flight);
+            await _flightRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BookingSystem.Domain.AggregatesModel.TicketAggregate.Services;
-using Confluent.Kafka;
 using MessageBus;
 using Quartz;
 
@@ -30,10 +29,21 @@ namespace BookingSystem.SearchService.Api.Jobs
                 messages.Add(consumeResult);
             }
 
-            foreach(var message in messages)
+            var groupedMessages = messages
+                    .GroupBy(Guid.Parse) 
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (var (flightId, count) in groupedMessages)
             {
-                await _flightService.ReturnASeat(Guid.Parse(message));
+                var flight = await _flightService.GetInfoAboutFlightAsync(flightId);
+                for (int i = 0; i < count; i++)
+                {
+                    flight.ReturnASeat();
+                }
+
+                await _flightService.UpdateFlightAsync(flight);
             }
         }
     }
 }
+

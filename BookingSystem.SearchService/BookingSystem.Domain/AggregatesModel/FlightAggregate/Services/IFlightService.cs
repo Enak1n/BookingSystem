@@ -6,5 +6,6 @@
         Task<Flight> GetInfoAboutFlightAsync(Guid id);
         Task TakeASeat(Guid flightId);
         Task ReturnASeat(Guid flightId);
+        Task UpdateFlightAsync(Flight flight);
     }
 }
